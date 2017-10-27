@@ -1,0 +1,92 @@
+import { NgModule } from '@angular/core';
+import { CommonModule } from '@angular/common';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { RouterModule } from '@angular/router';
+
+import { ToastyModule, ToastyService } from 'ng2-toasty';
+
+import { FormlyModule, FormlyBootstrapModule } from 'ng-formly';
+
+import { BsDropdownModule } from 'ngx-bootstrap/dropdown';
+
+import { UIButtonsModule } from './components/buttons/buttons.module';
+import { UIModalModule } from './components/modal/modal.module';
+import { UICardModule } from './components/card/card.module';
+import { UIFormlyModule } from './formly-module/formly.module';
+
+import { UIDashboardIconComponent } from './components/dashboard-icon/dashboard-icon.component';
+import { UIFormComponent } from './components/form/ui-form.component';
+import { UILogoComponent } from './components/logo/logo.component';
+import { UIMessageComponent } from './components/message/message.component';
+import { UINavsVerticalComponent } from './components/navs/navs-vertical.component';
+import { UIPageComponent } from './components/page/page.component';
+import { UITabsComponent } from './components/tabs/tabs.component';
+import { UITabsVerticalComponent } from './components/tabs/tabs-vertical.component';
+import { UITemplatesComponent } from './components/templates/templates.component';
+
+import { FormService } from './services/form.service';
+import { UIService } from './services/ui.service';
+
+/**
+ * Eported Modules
+ * @type { Array }
+ */
+const modules = [
+  UIButtonsModule,
+  UIModalModule,
+  UICardModule,
+  UIFormlyModule,
+];
+
+/**
+ * Exported Components
+ * @type { Array }
+ */
+const components = [
+  UIDashboardIconComponent,
+  UIFormComponent,
+  UILogoComponent,
+  UIMessageComponent,
+  UINavsVerticalComponent,
+  UIPageComponent,
+  UITabsComponent,
+  UITabsVerticalComponent,
+  UITemplatesComponent,
+];
+
+/**
+ * Exported Providers
+ * @type { Array }
+ */
+const providers = [
+    FormService,
+    UIService,
+    ToastyService,
+];
+
+@NgModule({
+    imports: [
+        CommonModule,
+        FormsModule,
+        ReactiveFormsModule,
+        RouterModule,
+        FormlyModule.forRoot(),
+        FormlyBootstrapModule,
+        ToastyModule,
+        BsDropdownModule.forRoot(),
+        ...modules
+    ],
+    exports: [
+      CommonModule,
+      BsDropdownModule,
+      ...modules,
+      ...components,
+    ],
+    declarations: [
+        ...components,
+    ],
+    providers: [
+        ...providers,
+    ],
+})
+export class UIModule { }

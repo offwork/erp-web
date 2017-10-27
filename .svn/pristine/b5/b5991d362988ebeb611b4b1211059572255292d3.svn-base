@@ -1,0 +1,437 @@
+// Here you can add other styles
+@font-face {
+  font-family: 'Material Icons';
+  font-style: normal;
+  font-weight: 400;
+  src: url(~material-design-icons/iconfont/MaterialIcons-Regular.eot); /* For IE6-8 */
+  src: local('Material Icons'),
+  local('MaterialIcons-Regular'),
+  url(~material-design-icons/iconfont/MaterialIcons-Regular.woff2) format('woff2'),
+  url(~material-design-icons/iconfont/MaterialIcons-Regular.woff) format('woff'),
+  url(~material-design-icons/iconfont/MaterialIcons-Regular.ttf) format('truetype');
+}
+.material-icons {
+  font-family: 'Material Icons';
+  font-weight: normal;
+  font-style: normal;
+  font-size: 12px;  /* Preferred icon size */
+  display: inline-block;
+  line-height: 1;
+  text-transform: none;
+  letter-spacing: normal;
+  word-wrap: normal;
+  white-space: nowrap;
+  direction: ltr;
+
+  /* Support for all WebKit browsers. */
+  -webkit-font-smoothing: antialiased;
+  /* Support for Safari and Chrome. */
+  text-rendering: optimizeLegibility;
+
+  /* Support for Firefox. */
+  -moz-osx-font-smoothing: grayscale;
+
+  /* Support for IE. */
+  font-feature-settings: 'liga';
+}
+// Here you can add other styles
+button {
+  outline: none;
+  &:focus {
+    outline-style: none;
+  }
+}
+
+$aside-wd:                                220px;
+$aside-wd-collapsed:                      50px;
+$aside-wd-collapsed-text:                 90px;
+$aside-bg:                                #fff;
+
+$content-bg:                              e4e5e6;
+$content-heading-bg:                      #fafbfc;
+$content-heading-border:                  #cfdbe2;
+$content-padding:                         20px;
+
+$footer-hg:                               60px;
+
+$navbar-hg:                               55px;
+
+$boxed-max-width:                         1140px;
+$z-index-main-section:                    111;
+
+html {
+  direction: ltr;
+  height: 100%;
+  -ms-touch-action: manipulation;
+  touch-action: manipulation;
+}
+html, body, kl-root {
+  height: 100%;
+}
+kl-root, .app-body {
+  display: block;
+}
+.app-body {
+  display: flex;
+  flex-direction: row;
+  flex-grow: 1;
+  position: relative;
+  width: 100%;
+  height: auto;
+  min-height: 100%;
+  overflow-x: hidden;
+  &.ng-leave {
+    display: none;
+  }
+  > .aside {
+    position: relative !important;
+    width: $aside-wd;
+    top: 0; left: 0;
+    bottom: 0;
+    z-index: $z-index-main-section + 5;
+    background-color: $aside-bg;
+    .aside-inner {
+      padding-top: $navbar-hg * 2;
+      height: 100%;
+      width: $aside-wd;
+      overflow: hidden;
+    }
+    > .nav-floating {
+      left: inherit;
+      margin-left: 50px;
+      z-index: 1110;
+      min-width: 190px;
+      overflow: auto;
+    }
+    .dropdown-backdrop {
+      z-index: -1;
+    }
+  }
+}
+@media only screen and (min-width: 768px) {
+  body {
+    min-height: 100%;
+  }
+  .app-body {
+    > .aside {
+      .aside-inner {
+        padding-top: $navbar-hg;
+      }
+    }
+  }
+}
+@mixin animation-fill-mode($fill-mode) {
+  -webkit-animation-fill-mode: $fill-mode;
+  animation-fill-mode: $fill-mode;
+}
+@mixin animation-direction($direction) {
+  -webkit-animation-direction: $direction;
+  animation-direction: $direction;
+}
+@mixin animation($animation) {
+  -webkit-animation: $animation;
+  -o-animation: $animation;
+  animation: $animation;
+}
+@mixin transition($transition...) {
+  -webkit-transition: $transition;
+  -o-transition: $transition;
+  transition: $transition;
+}
+@mixin backface-visibility($visibility) {
+  -webkit-backface-visibility: $visibility;
+  -moz-backface-visibility: $visibility;
+  backface-visibility: $visibility;
+}
+@mixin translate3d($x, $y, $z) {
+  -webkit-transform: translate3d($x, $y, $z);
+  transform: translate3d($x, $y, $z);
+}
+@mixin transition-transform($transition...) {
+  -webkit-transition: -webkit-transform $transition;
+  -moz-transition: -moz-transform $transition;
+  -o-transition: -o-transform $transition;
+  transition: transform $transition;
+}
+@media only screen and (max-width: 767px) {
+  .app-body {
+    > .aside {
+      margin-left: -$aside-wd;
+    }
+  }
+  .csstransforms3d  {
+    .app-body {
+      @include backface-visibility(hidden);
+      > .aside {
+        margin-left: 0;
+        @include translate3d(-100%,0,0);
+        @include transition-transform(.3s ease);
+      }
+    }
+  }
+}
+@media only screen and (max-width: 767px) {
+  .aside-collapsed .app-body {
+    > .aside {
+      margin-left: -$aside-wd-collapsed;
+    }
+  }
+  .aside-collapsed {
+    .app-body {
+      > .aside {
+        margin-left: 0;
+      }
+      > .sidebar .has-feedback input{
+        display: none !important;
+      }
+    }
+  }
+  .csstransforms3d  {
+    .aside-collapsed .app-body {
+      @include backface-visibility(hidden);
+      > .aside {
+        margin-left: 0;
+        @include translate3d(-$aside-wd-collapsed,0,0);
+        @include transition-transform(.3s ease);
+      }
+    }
+    .aside-collapsed.aside-toggled {
+      .app-body {
+        > .aside {
+          @include translate3d(0,0,0);
+        }
+      }
+    }
+  }
+}
+.aside-collapsed {
+  overflow-y: auto;
+  -webkit-overflow-scrolling: touch;
+  .app-body {
+    > .aside {
+      &, > .aside-inner {
+        width: $aside-wd-collapsed;
+      }
+      > .nav-floating {
+        margin-left: 50px;
+      }
+    }
+    .sidebar {
+      width: 50px !important;
+    }
+  }
+}
+@media only screen and (max-width: 767px) {
+
+  .aside-collapsed-text .app-body {
+    > .aside {
+      margin-left: -$aside-wd-collapsed-text;
+    }
+  }
+  .aside-collapsed-text.aside-toggled {
+    .app-body {
+      > .aside {
+        margin-left: 0;
+      }
+    }
+  }
+  .csstransforms3d  {
+    .aside-collapsed-text .app-body {
+      @include backface-visibility(hidden);
+      > .aside {
+        margin-left: 0;
+        @include translate3d(-$aside-wd-collapsed-text,0,0);
+        @include transition-transform(.3s ease);
+      }
+    }
+    .aside-collapsed-text.aside-toggled {
+      .app-body {
+        > .aside {
+          @include translate3d(0,0,0);
+        }
+      }
+    }
+  }
+}
+.aside-collapsed-text {
+  overflow-y: auto;
+  -webkit-overflow-scrolling: touch;
+  .app-body {
+    > .aside {
+      &, > .aside-inner {
+        width: $aside-wd-collapsed-text;
+      }
+      > .nav-floating {
+        margin-left: 50px;
+      }
+    }
+  }
+}
+@mixin disable-transform()
+{
+  -webkit-transform: none;
+  -moz-transform: none;
+  -ms-transform: none;
+  transform: none;
+}
+
+.app-body {
+  > .aside,
+  > .offsidebar {
+    position: fixed;
+  }
+  > .aside {
+    height: 1px;
+    min-height: 100%;
+    > .aside-inner {
+      position: fixed;
+      top: 0;
+      bottom: 0;
+    }
+  }
+}
+.app-body > .aside > .aside-inner {
+  position: static !important;
+}
+.app-body > .aside {
+  @include transition(#{"width .2s cubic-bezier(0.35, 0, 0.25, 1), translate .2s cubic-bezier(0.35, 0, 0.25, 1)"});
+}
+.aside-inner,
+.navbar-header,
+.sidebar > .nav > li {
+  @include transition(width .2s cubic-bezier(0.35, 0, 0.25, 1));
+}
+.app-body > section {
+  @include transition(margin-left .2s cubic-bezier(0.35, 0, 0.25, 1));
+}
+.sidebar > .nav .label {
+  @include animation(fadeInRight 1s);
+  @include animation-fill-mode(both);
+}
+.aside-collapsed .sidebar > .nav .label,
+.aside-collapsed-text .sidebar > .nav .label {
+  @include animation(fadeIn 1s);
+}
+.sidebar .nav > li > a {
+  @include animation(fadeInLeft .5s);
+}
+
+.sidebar > .nav > .nav-heading,
+.sidebar > .nav > li > a > span,
+.navbar-brand .brand-logo {
+  @include animation(fadeIn 1s);
+}
+
+.sidebar li > a, .sidebar li > .nav-item,
+.sidebar > .nav > .nav-heading {
+  white-space: nowrap;
+}
+
+.aside-collapsed,
+.aside-collapsed-text {
+  .user-block-picture {
+    @include transition(width .2s cubic-bezier(0.35, 0, 0.25, 1));
+  }
+  .user-block {
+    @include transition(padding .2s cubic-bezier(0.35, 0, 0.25, 1));
+  }
+}
+
+
+.swal2-container, .swal2-fade, .swal2-shown {
+  div {
+    &.swal2-modal, .swal2-show {
+      border-radius: 0!important;
+      padding: 0 0!important;
+      div {
+        &.swal2-icon, .swal2-error, .swal2-animate-error-icon {
+          display: none!important;
+          span {
+            display: none;
+          }
+        }
+      }
+      h2 {
+        background: #353535;
+        color: #fff!important;
+        text-align: left!important;
+        font-size: .875rem;
+        padding: 12px;
+      }
+      div {
+        &.swal2-content {
+          text-align: left!important;
+          font-size: .875rem;
+          color: rgba(0, 0, 0, 0.8)!important;
+          padding: 12px;
+        }
+      }
+      div {
+        &.swal2-buttonswrapper {
+          float: right;
+          margin-bottom: 12px;
+          button {
+            margin-right: 12px;
+          }
+        }
+      }
+    }
+  }
+}
+
+.social-icons {
+  li {
+    float: left;
+    display: inline;
+    list-style: none;
+    margin-right: 5px;
+    margin-bottom: 5px;
+    text-indent: -9999px;
+    > a {
+      -webkit-border-radius: 2px;
+      -moz-border-radius: 2px;
+      -ms-border-radius: 2px;
+      -o-border-radius: 2px;
+      border-radius: 2px;
+      width: 28px;
+      height: 28px;
+      display: block;
+      background-position: 0 0;
+      background-repeat: no-repeat;
+      transition: all .3s ease-in-out;
+      -o-transition: all .3s ease-in-out;
+      -ms-transition: all .3s ease-in-out;
+      -moz-transition: all .3s ease-in-out;
+      -webkit-transition: all .3s ease-in-out;
+    }
+    &:hover > a {
+      background-position: 0 -38px
+    }
+    .facebook {
+      background: url(../assets/img/social/facebook.png) no-repeat
+    }
+    .googleplus {
+      background: url(../assets/img/social/googleplus.png) no-repeat
+    }
+    .twitter {
+      background: url(../assets/img/social/twitter.png) no-repeat
+    }
+    .instagram {
+      background: url(../assets/img/social/instagram.png) no-repeat
+    }
+    .linkedin {
+      background: url(../assets/img/social/linkedin.png) no-repeat
+    }
+    .youtube {
+      background: url(../assets/img/social/youtube.png) no-repeat
+    }
+    .kalemyazilim {
+      background: url(../assets/img/social/www.png) no-repeat;
+    }
+  }
+  &:after, &:before {
+    content: " ";
+    display: table;
+    clear: both;
+  }
+}

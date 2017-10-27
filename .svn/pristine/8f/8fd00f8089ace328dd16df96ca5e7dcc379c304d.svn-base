@@ -1,0 +1,36 @@
+import { Injectable } from '@angular/core';
+import { ToastyService, ToastyConfig } from 'ng2-toasty';
+
+@Injectable()
+export class UIService {
+  constructor(
+    private toastService: ToastyService,
+    private toastConfig: ToastyConfig) {
+    this.toastConfig.limit = 10;
+    this.toastConfig.theme = 'bootstrap';
+  }
+
+  toastDefault(title, msg) {
+    this.toastService.default({ title, msg });
+  }
+
+  toastError(title, msg) {
+    this.toastService.error({ title, msg });
+  }
+
+  toastInfo(title, msg) {
+    this.toastService.info({ title, msg });
+  }
+
+  toastSuccess(title, msg) {
+    this.toastService.success({ title, msg });
+  }
+
+  toastWait(title, msg) {
+    this.toastService.wait({ title, msg });
+  }
+
+  toastWarning(title, msg) {
+    this.toastService.warning({ title, msg });
+  }
+}

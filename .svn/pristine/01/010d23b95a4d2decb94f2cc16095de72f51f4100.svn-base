@@ -1,0 +1,59 @@
+import { Injectable } from '@angular/core';
+import { Http, Headers, RequestOptions } from '@angular/http';
+
+import { Observable } from 'rxjs/Observable';
+import 'rxjs/add/operator/catch';
+import 'rxjs/add/operator/do';
+import 'rxjs/add/operator/map';
+import 'rxjs/add/operator/switchMap';
+import 'rxjs/add/observable/throw';
+
+const BASE_URL: string = 'http://192.168.0.105:8190';
+const TOKEN: string = '1ede7d12-fdf9-480d-8be4-921a458dbda6';
+
+@Injectable()
+export class SystemAdminService {
+
+  private headers: Headers;
+  private options: RequestOptions;
+
+  constructor(private http: Http) {
+    this.headers = new Headers();
+    this.headers.append('Content-Type', 'application/json');
+    this.headers.append('Authorization', 'bearer ' + TOKEN);
+
+    this.options = new RequestOptions({ headers: this.headers });
+  }
+
+  getAllUsers(): Observable<any> {
+    return Observable
+      .from(this.http.get(`${BASE_URL}/user/all`, this.options))
+      .map(res => res.json())
+      .catch(SystemAdminService.getUserRequestsError);
+  }
+
+  updateUser(user: any): Observable<any> {
+    return Observable
+      .from(this.http.put(`${BASE_URL}/user`, JSON.stringify(user), this.options ))
+      .map(res => res.json())
+      .catch(SystemAdminService.getUserRequestsError);
+  }
+
+  addUser(user: any): Observable<any> {
+    return Observable
+      .from(this.http.post(`${BASE_URL}/user`, JSON.stringify(user), this.options ))
+      .map(res => res.json())
+      .catch(SystemAdminService.getUserRequestsError);
+  }
+
+  removeUser(id): Observable<any> {
+    return Observable
+      .from(this.http.delete(`${BASE_URL}/user/${id}`, this.options))
+      .map(res => res.json())
+      .catch(SystemAdminService.getUserRequestsError);
+  }
+
+  private static getUserRequestsError (err: any) {
+    return Observable.throw(new Error(err || 'Unacknowledged Server Error!!'));
+  }
+}

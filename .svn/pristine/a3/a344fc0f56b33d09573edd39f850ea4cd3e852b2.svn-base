@@ -1,0 +1,11 @@
+import { Component } from '@angular/core';
+
+@Component({
+  selector: 'kl-dashboard',
+  template: `
+    <kl-content-dashboard></kl-content-dashboard>
+    <kl-system-dashboard></kl-system-dashboard>
+  `
+})
+
+export class DashboardComponent { }

@@ -1,0 +1,216 @@
+import { Component,
+  Input,
+  OnInit,
+  TemplateRef,
+  ViewChild }                 from '@angular/core';
+
+import { BsModalService }     from 'ngx-bootstrap/modal';
+import { BsModalRef }         from 'ngx-bootstrap/modal/modal-options.class';
+
+import { AddComponent }       from '../../../add.component'
+import { SystemAdminService } from '../../../services/system-admin.service';
+
+import * as wjcGridPdf        from 'wijmo/wijmo.grid.pdf';
+import * as wjcPdf            from 'wijmo/wijmo.pdf';
+import * as wjcCore           from 'wijmo/wijmo';
+import * as wjcGrid           from 'wijmo/wijmo.grid';
+import * as wjcGridFilter     from 'wijmo/wijmo.grid.filter';
+import * as wjcXlsx           from 'wijmo/wijmo.xlsx';
+import * as wjcGridXlsx       from 'wijmo/wijmo.grid.xlsx';
+
+@Component({
+  templateUrl: './users.component.html'
+})
+
+export class UsersComponent implements OnInit, AddComponent {
+
+  @Input() public data            : any;
+  @ViewChild('filter') filter     : wjcGridFilter.FlexGridFilter;
+  @ViewChild('flexGrid') flexGrid : wjcGrid.FlexGrid;
+
+  // Reference enumerations to use them in markup.
+  public exportMode               = wjcGridPdf.ExportMode.All;
+  public orientation              = wjcPdf.PdfPageOrientation.Portrait;
+  public scaleMode                = wjcGridPdf.ScaleMode.ActualSize;
+  public allUsers                 : wjcCore.CollectionView;
+
+  // User API
+  public currentUserRow           : any;
+  public addUserRow               : any;
+  public fieldNames               : string[];
+  public modalOperationNumber     : number;
+  public modalRef                 : BsModalRef;
+  public users;
+
+  constructor(
+    private systemAdminService: SystemAdminService,
+    private modalService: BsModalService
+  ) {}
+
+  ngOnInit() {
+    this.fieldNames = ['id', 'status', 'username'];
+    this.systemAdminService
+      .getAllUsers()
+      .subscribe(
+        (res: any) => {console.log('USERS: ', res); this.users = res.data;},
+        error2 => console.log('USERS ERROR!!!'),
+        () => {
+          this.initialUsers();
+        }
+      );
+
+    console.log('GET USERS: ', this.users); // Undefined....
+  }
+
+  private initialUsers() {
+    this.allUsers       = new wjcCore.CollectionView(this.users);
+    this.currentUserRow = this.allUsers.items[0];
+    this.addUserRow     = {
+      email             : '',
+      fullName          : '',
+      status            : '',
+      username          : ''
+    };
+
+    this.allUsers.currentChanged.addHandler(() => {
+      this.currentUserRow = this.allUsers.currentItem;
+    });
+  }
+
+  public clickExportToExcel() {
+    wjcGridXlsx.FlexGridXlsxConverter.saveAsync(this.flexGrid, {
+      includeColumnHeaders: true,
+      includeCellStyles: false,
+      formatItem: UsersComponent.exportFormatItem
+    }, 'FlexGrid.xlsx');
+  }
+
+  public clickExportToPdf() {
+    wjcGridPdf.FlexGridPdfConverter.export(this.flexGrid, 'FlexGrid.pdf', {
+      maxPages: 10,
+      exportMode: this.exportMode,
+      scaleMode: this.scaleMode,
+      documentOptions: {
+        pageSettings: {
+          layout: this.orientation
+        },
+        header: {
+          declarative: {
+            text: '\t&[Page]\\&[Pages]'
+          }
+        },
+        footer: {
+          declarative: {
+            text: '\t&[Page]\\&[Pages]'
+          }
+        },
+        info: {
+          author: 'C1',
+          title: 'PdfDocument sample',
+          subject: 'PdfDocument'
+        }
+      },
+      styles: {
+        cellStyle: {
+          backgroundColor: '#ffffff',
+          borderColor: '#c6c6c6'
+        },
+        altCellStyle: {
+          backgroundColor: '#f9f9f9',
+        },
+        groupCellStyle: {
+          backgroundColor: '#dddddd',
+        },
+        headerCellStyle: {
+          backgroundColor: '#eaeaea',
+        },
+      }
+    });
+  }
+
+  public menuItemClicked(idx, template: TemplateRef<any>) {
+
+    if ( idx === 2 ) {
+      if ( this.currentUserRow.hasOwnProperty('id') ) {
+        this.systemAdminService
+          .removeUser(this.currentUserRow.id)
+          .subscribe(
+            (res) => console.log('DELETE: ', res),
+            (err) => console.log('DELETE ERROR: ', err),
+            () => console.log('DELETE COMPLETE! ')
+          );
+      }
+    }
+
+    this.modalOperationNumber = idx;
+    this.openModal(template);
+  }
+
+  public openModal(template: TemplateRef<any>) {
+    if ( this.modalOperationNumber ===  2) return;
+
+    this.modalRef = this.modalService.show(template);
+  }
+
+  public callUserApi(action) {
+    console.log('Action: ', action);
+
+    if( action === 'save' ) {
+      this.systemAdminService
+        .updateUser(this.currentUserRow)
+        .subscribe(
+          (res) => console.log('UPDATE: ', res),
+          (err) => {
+            console.log('UPDATE ERROR: ', err);
+            this.modalRef.hide();
+          },
+          () => {
+            console.log('UPDATE COMPLETE! ');
+            this.modalRef.hide();
+          }
+        );
+    } else {
+      this.systemAdminService
+        .addUser(this.currentUserRow)
+        .subscribe(
+          (res) => console.log('ADD: ', res),
+          (err) => {
+            console.log('ADD ERROR: ', err);
+            this.modalRef.hide();
+          },
+          () => {
+            console.log('ADD COMPLETE! ');
+            this.modalRef.hide();
+          }
+        );
+    }
+  }
+  /*public pageChanged(event: any): void {
+    console.log('Page changed to: ' + event.page);
+    console.log('Number items per page: ' + event.itemsPerPage);
+    this.allUsers.moveToPage(event.page - 1);
+  }*/
+
+  static exportFormatItem(args: wjcGridXlsx.XlsxFormatItemEventArgs) {
+    const p = args.panel,
+      row = args.row,
+      col = args.col,
+      xlsxCell = args.xlsxCell;
+    let cell: HTMLElement;
+
+    if (p.cellType === wjcGrid.CellType.Cell) {
+      if (p.columns[col].binding === 'color') {
+        if (xlsxCell.value) {
+          if (!xlsxCell.style.font) {
+            xlsxCell.style.font = {};
+          }
+          xlsxCell.style.font.color = (<string>xlsxCell.value).toLowerCase();
+        }
+      } else if (p.columns[col].binding === 'active' && p.rows[row] instanceof wjcGrid.GroupRow) {
+        cell = args.getFormattedCell();
+        xlsxCell.value = cell.textContent.trim();
+        xlsxCell.style.hAlign = wjcXlsx.HAlign.Left;
+      }
+    }
+  }
+}

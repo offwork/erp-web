@@ -1,0 +1,84 @@
+import { Injectable } from '@angular/core';
+import { Observable } from 'rxjs/Observable';
+import 'rxjs/add/observable/of';
+import { AccessToken } from '../../shared/models';
+import { SystemUser as User } from '../../shared/models';
+
+@Injectable()
+export class AuthService {
+
+  private user: User = new User();
+  private token: AccessToken = new AccessToken();
+  private roles: any = [{
+    assigned: ['system-admin'],
+    unassigned: [''],
+  }];
+
+  constructor() {
+    /* set user */
+    this.user.id = 'admin';
+    this.user.username = 'kerem@gmail.com';
+    this.user.email = 'kerem@gmail.com';
+    this.user.password = '123';
+    this.user.firstName = 'Kerem';
+    this.user.lastName = 'Özdemir';
+    this.user.fullName = 'Kerem Özdemir';
+    this.user.avatar = 'https://avatars0.githubusercontent.com/u/10039583?v=4&s=200';
+    this.user.created = new Date();
+    this.user.modified = this.user.created;
+    this.user.roles = this.roles;
+    /* set token */
+    this.token.id = 'ba8583be-f8a3-4e5b-b27c-851e36125c0f';
+    this.token.ttl = 1209600;
+    this.token.created = new Date();
+    this.token.userId = this.user.id;
+    this.token.user = this.user;
+  }
+
+  login(credentials) {
+    return this.isUserLogin(credentials);
+  }
+
+  logout() {
+    if (this.isAuthenticated()) {
+      console.log('Logging out...');
+      window.localStorage.removeItem('token');
+      return this.isUserLogout();
+    } else {
+      console.log('Already logged out...');
+      return Observable.of({});
+    }
+  }
+
+  create(credentials) {
+    return this.isUserLogin(credentials);
+  }
+
+  recover(user: any) {}
+
+  isAuthenticated() {
+    if (!this.user.id && window.localStorage.getItem('token')) {
+      this.token = JSON.parse(window.localStorage.getItem('token'));
+      this.user = this.token.user;
+    }
+    return this.user.id ? this.user : false;
+  }
+
+  setToken(token) {
+    window.localStorage.setItem('token', JSON.stringify(token));
+    return new Promise(resolve => {
+      this.token = token;
+      this.user = token.user;
+      resolve(this.user);
+    });
+  }
+
+  isUserLogin(credentials: any): Observable<AccessToken> {
+    return Observable.of(this.token);
+  }
+
+  isUserLogout(): Observable<any> {
+    return Observable.of(this.token);
+  }
+
+}

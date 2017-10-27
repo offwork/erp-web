@@ -1,0 +1,55 @@
+import { Component, OnInit } from '@angular/core';
+
+import { SidebarService } from '../../sidebar.service';
+
+/*
+  <header class="app-header navbar">
+      <button class="navbar-toggler d-lg-none" type="button" mobile-nav-toggle>&#9776;</button>
+      <a class="navbar-brand" [routerLink]="['/']"></a>
+      <!-- <a class="nav-link navbar-toggler sidebar-toggle" href="#">&#9776;</a> -->
+      <button klSidebarMinimizer class="navbar-toggler d-md-down-none" type="button" >&#9776;</button>
+      <kl-layout-header-nav></kl-layout-header-nav>
+      <ul class="nav navbar-nav ml-auto">
+        <kl-layout-header-domains></kl-layout-header-domains>
+        <kl-layout-header-user></kl-layout-header-user>
+        <button class="navbar-toggler d-md-down-none" type="button" klAsideMenuToggler>&#9776;</button>
+      </ul>
+    </header>
+*/
+
+@Component({
+  selector: 'kl-layout-header',
+  template: `
+    <header class="app-header navbar">
+      <button class="navbar-toggler d-lg-none" type="button" mobile-nav-toggle>&#9776;</button>
+      <a class="navbar-brand" [routerLink]="['/']"></a>
+      <a class="navbar-brand-collapsed" [routerLink]="['/']"></a>
+      <!-- <a class="nav-link navbar-toggler sidebar-toggle" href="#">&#9776;</a> -->
+      <button klSidebarMinimizer (click)="toggleCollapsedSidebar()" class="navbar-toggler d-md-down-none" type="button" >&#9776;</button>
+      <kl-layout-header-nav></kl-layout-header-nav>
+      <ul class="nav navbar-nav ml-auto">
+        <!-- <kl-layout-header-domains></kl-layout-header-domains> -->
+        <kl-layout-header-user></kl-layout-header-user>
+        <button class="navbar-toggler d-md-down-none" type="button" klAsideMenuToggler>&#9776;</button>
+      </ul>
+    </header>
+  `,
+  styles: [`
+    .navbar-brand {
+      background-size: 120px !important;
+    }
+  `],
+})
+
+export class HeaderComponent implements OnInit {
+
+  public config: any;
+
+  constructor(private sidebarService: SidebarService) { }
+
+  ngOnInit() { }
+  toggleCollapsedSidebar() {
+    this.sidebarService.layout.isCollapsed = !this.sidebarService.layout.isCollapsed;
+  }
+
+}

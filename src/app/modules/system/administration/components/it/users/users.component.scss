@@ -1,0 +1,51 @@
+ul {
+  &.dropdown-menu {
+    font-size: .75rem;
+  }
+  li {
+    a {
+      &.dropdown-item {
+        padding: 3px 20px;
+      }
+    }
+  }
+}
+
+div {
+  &.modal-body {
+    div {
+      &.input-group {
+        /*height: 25px;*/
+      }
+      label {
+        &.input-group-label {
+          font-size: .75rem;
+          width: 100px;
+          text-align: right;
+          font-weight: normal;
+          margin: .3rem 1rem 0 0;
+        }
+      }
+    }
+  }
+}
+
+.modal-header, .modal-footer {
+  /*font-size: 18px;*/
+  height: 40px;
+  background: #f0f3f5;
+  padding: 1.4rem;
+}
+.wj-dialog-header {
+  background: transparent;
+  border-bottom: 1px solid #e5e5e5;
+}
+.wj-dialog-footer {
+  border-top: 1px solid #e5e5e5;
+}
+/* Custom Modal Size */
+@media (min-width: 576px) {
+  .modal-dialog {
+    min-width: 800px;
+  }
+}

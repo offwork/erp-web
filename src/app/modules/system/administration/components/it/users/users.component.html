@@ -1,0 +1,170 @@
+<div class="btn-group float-right">
+  <div class="btn-group px-2" dropdown placement="bottom right">
+    <button type="button" class="btn btn-outline-danger btn-sm">Dışa Aktar</button>
+    <button type="button" dropdownToggle class="btn btn-outline-danger btn-sm dropdown-toggle dropdown-toggle-split">
+      <span class="caret"></span>
+      <span class="sr-only">Split button!</span>
+    </button>
+    <ul *dropdownMenu class="dropdown-menu" role="menu">
+      <li role="menuitem"><a class="dropdown-item" href="javascript:void (0);" (click)="clickExportToExcel()">Excel</a></li>
+      <li role="menuitem"><a class="dropdown-item" href="javascript:void (0);" (click)="clickExportToPdf()">PDF</a>
+    </ul>
+  </div>
+  <button class="btn btn-outline-primary btn-sm" (click)="modalOperationNumber = -1; openModal(mdTemplate);">
+    Ekle
+    <i class="fa fa-plus"></i>
+  </button>
+  <button class="btn btn-outline-primary btn-sm ml-2" (click)="popup.show();">
+    Ekle2
+    <i class="fa fa-plus"></i>
+  </button>
+</div>
+<br><hr/>
+<div #detailsRef class="details" refreshGrid="" (clickOutside)="flexGrid.refresh(true)">
+  <wj-flex-grid #flexGrid [isReadOnly]="true" [allowDragging]="'None'"
+                [allowResizing]="'Both'"
+                [deferResizing]="true" [itemsSource]="allUsers" >
+    <wj-flex-grid-filter #filter></wj-flex-grid-filter>
+    <wj-flex-grid-column [width]="40">
+      <ng-template wjFlexGridCellTemplate [cellType]="'Cell'">
+        <div class="btn-group" dropdown="" container="body">
+          <button class="btn btn-transparent dropdown-toggle p-0" dropdownToggle=""
+                  style="color: #9e9e9e"
+                  type="button" aria-haspopup="true" aria-expanded="true">
+            <i class="fa fa-cog"></i>
+          </button>
+          <div class="dropdown-menu" *dropdownMenu="">
+            <a class="dropdown-item" href="javascript:void(0)"
+               (click)="menuItemClicked(0, mdTemplate)">
+              <i class="fa fa-pencil" style="color: #9E9E9E" aria-hidden="true"></i> Değiştir</a>
+            <a class="dropdown-item" href="javascript:void(0)"
+               (click)="menuItemClicked(1, mdTemplate)">
+              <i class="fa fa-info-circle" style="color: #9E9E9E" aria-hidden="true"></i> İncele</a>
+            <a class="dropdown-item" href="javascript:void(0)"
+               (click)="menuItemClicked(2, mdTemplate)">
+              <i class="fa fa-trash" style="color: #9E9E9E" aria-hidden="true"></i> Sil</a>
+          </div>
+        </div>
+      </ng-template>
+    </wj-flex-grid-column>
+    <wj-flex-grid-column [header]="'Durum'" [width]="'*'" [binding]="'status'"></wj-flex-grid-column>
+    <wj-flex-grid-column [header]="'Tam Adı'" [width]="'*'" [binding]="'fullName'"></wj-flex-grid-column>
+    <wj-flex-grid-column [header]="'Kullanıcı Adı'" [width]="'*'" [binding]="'username'"></wj-flex-grid-column>
+    <wj-flex-grid-column [header]="'E-Posta'" [width]="'*'" [binding]="'email'"></wj-flex-grid-column>
+  </wj-flex-grid>
+  <pagination *ngIf="totalItems > 10" class="pagination-sm" [totalItems]="totalItems"
+              [(ngModel)]="currentIndex"
+              [maxSize]="maxSize"
+              (pageChanged)="pageChanged($event)"
+              [boundaryLinks]="true" ></pagination>
+</div>
+
+<!--  -->
+<ng-template #mdTemplate>
+  <div class="modal-header">
+    <h4 class="modal-title pull-left">Kullanıcı</h4>
+    <button type="button" class="close pull-right" aria-label="Close" (click)="modalRef.hide()">
+      <span aria-hidden="true">&times;</span>
+    </button>
+  </div>
+  <div *ngIf="modalOperationNumber === -1 " class="modal-body">
+    <div class="input-group mb-1">
+      <label class="input-group-label">
+        Email
+      </label>
+      <input type="text" class="form-control" [(ngModel)]="addUserRow.email" placeholder="Email">
+    </div>
+    <div class="input-group mb-1">
+      <label class="input-group-label">
+        Tam Adı
+      </label>
+      <input type="text" class="form-control" [(ngModel)]="addUserRow.fullName" placeholder="Tam Adı">
+    </div>
+    <div class="input-group mb-1">
+      <label class="input-group-label">
+        Kullanıcı Adı
+      </label>
+      <input type="text" class="form-control" [(ngModel)]="addUserRow.username" placeholder="Kullanıcı Adı">
+    </div>
+    <div class="input-group mb-1">
+      <label class="input-group-label">
+        Şifre
+      </label>
+      <input type="password" class="form-control" [(ngModel)]="addUserRow.password" placeholder="Şifre">
+    </div>
+  </div>
+  <div *ngIf="modalOperationNumber !== -1" class="modal-body">
+    <div class="input-group mb-1">
+      <label class="input-group-label">
+        Email
+      </label>
+      <input type="text" class="form-control"
+             [disabled]="modalOperationNumber === 1"
+             [(ngModel)]="currentUserRow.email" placeholder="Email">
+    </div>
+    <div class="input-group mb-1">
+      <label class="input-group-label">
+        Tam Adı
+      </label>
+      <input type="text" class="form-control"
+             [disabled]="modalOperationNumber === 1"
+             [(ngModel)]="currentUserRow.fullName" placeholder="Tam Adı">
+    </div>
+
+    <div class="input-group mb-1">
+      <label class="input-group-label">
+        Kullanıcı Adı
+      </label>
+      <input type="text" class="form-control"
+             [disabled]="modalOperationNumber === 1"
+             [(ngModel)]="currentUserRow.username" placeholder="Kullanıcı Adı">
+    </div>
+    <div class="input-group mb-1">
+      <label class="input-group-label">
+        Şifre
+      </label>
+      <input type="password" class="form-control" [disabled]="modalOperationNumber === 1" placeholder="Şifre">
+    </div>
+  </div>
+  <div class="modal-footer">
+    <div class="btn-group px-2" dropdown placement="bottom right">
+      <button type="button" class="btn btn-sm btn-primary">Kaydet</button>
+      <button type="button" dropdownToggle class="btn btn-sm btn-primary dropdown-toggle dropdown-toggle-split">
+        <span class="caret"></span>
+        <span class="sr-only">Split button!</span>
+      </button>
+      <ul *dropdownMenu class="dropdown-menu" role="menu">
+        <li role="menuitem">
+          <a class="dropdown-item" href="javascript:void (0);" (click)="callUserApi('save')">Kaydet</a>
+        </li>
+        <li role="menuitem"><a class="dropdown-item"  href="javascript:void (0);" (click)="callUserApi('add')">Yeni</a></li>
+      </ul>
+    </div>
+    <button class="btn btn-sm btn-danger" (click)="modalRef.hide()">Vazgeç</button>
+  </div>
+</ng-template>
+
+<wj-popup #popup class="modal-dialog" [modal]="true" [hideTrigger]="'None'">
+  <div class="wj-dialog-header">
+    <button class="close wj-hide" type="button" aria-hidden="true">&times;</button>
+    <h4 class="modal-title">Kullanıcı</h4>
+  </div>
+  <div class="wj-dialog-body">
+    <div class="form-group">
+      <label>Username</label>
+      <input type="text" class="form-control" placeholder="Enter your Name" title="name">
+    </div>
+    <div class="form-group">
+      <label>Full Name</label>
+      <input type="text" class="form-control" placeholder="Enter your Full Name" title="name">
+    </div>
+    <div class="form-group">
+      <label>Password</label>
+      <input type="password" class="form-control" title="name">
+    </div>
+  </div>
+  <div class="wj-dialog-footer">
+    <button class="btn btn-primary wj-hide">Save</button>
+    <button class="btn btn-warning wj-hide">Cancel</button>
+  </div>
+</wj-popup>

@@ -1,0 +1,13 @@
+// Here you can add other styles
+button {
+  outline: none;
+  &:focus {
+    outline-style: none;
+  }
+}
+.brand-logo {
+  display: block;
+  height: 80px;
+  background: $navbar-brand-logo no-repeat center center;
+  background-size: 200px auto;
+}

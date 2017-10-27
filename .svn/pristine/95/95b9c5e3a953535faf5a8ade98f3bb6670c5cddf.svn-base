@@ -1,0 +1,91 @@
+import { Inject, Injectable, Optional } from '@angular/core';
+import {HttpClient, HttpHeaders, HttpParams, HttpRequest} from "@angular/common/http";
+import { SDKModels } from "../models/SDKModels";
+import { KalemAuth } from "./auth.service";
+import { JSONSearchParams } from "./search.params";
+import { ErrorHandler } from "./error.service";
+import { Observable } from "rxjs/Observable";
+import { KalemConfig } from "../kl.config";
+
+@Injectable()
+export abstract class BaseKalemApi {
+
+  protected path: string;
+  protected model: any;
+
+  constructor(@Inject(HttpClient) protected http: HttpClient,
+              @Inject(SDKModels) protected models: SDKModels,
+              @Inject(KalemAuth) protected auth: KalemAuth,
+              @Inject(JSONSearchParams) protected searchParams: JSONSearchParams,
+              @Optional() @Inject(ErrorHandler) protected errorHandler: ErrorHandler,) {
+    this.model = this.models.get(this.getModelName())
+  }
+
+  public request(
+    method: string,
+    url: string,
+    routerParams: any = {},
+    urlParams: any = {},
+    postBody: any = {},
+    pubsub: boolean = false,
+    customHeaders?: Function): Observable<any> {
+    Object.keys(routerParams).forEach((key: string) => {
+      url = url.replace(new RegExp(":" + key + "(\/|$)", "g"), routerParams[key] + '$1');
+    });
+
+    if (pubsub) {
+      console.info('SDK: PubSub functionality is disabled, generate SDK using -io enabled');
+    } else {
+      let headers = new HttpHeaders({['Content-Type']: 'application/json'});
+      this.authenticate(url, headers);
+
+      let body: any;
+      let postBodyKeys = typeof postBody === 'object' ? Object.keys(postBody) : [];
+      if (postBodyKeys.length === 1) {
+        body = postBody[postBodyKeys.shift()];
+      } else {
+        body = postBody;
+      }
+
+      if (typeof customHeaders === 'function') {
+        headers = customHeaders(headers);
+      }
+
+      this.searchParams.setJSON(urlParams);
+
+      let request = new HttpRequest(
+        method, url,
+        body ? JSON.stringify(body) : null, {
+          headers: headers,
+          params: new HttpParams(this.searchParams.getURLSearchParams() || null),
+          responseType: 'json'
+        });
+
+      return this.http.request(request)
+        .map(res => res)
+        .catch((e) => this.errorHandler.handleError(e));
+    }
+  }
+
+  public authenticate<T>(url: string, headers: HttpHeaders): void {
+    //let headers = new HttpHeaders({
+    // ['Authorization']: 'Basic UFJPVklERVI6MTIzNDU2Nzg=',
+    // ['Content-Type']: 'application/x-www-form-urlencoded; charset=utf-8'});
+    if (this.auth.getToken().access_token) {
+      headers.append(
+        'Authorization',
+        'Basic UFJPVklERVI6MTIzNDU2Nzg='
+      );
+    }
+  }
+
+  public create<T>(data: T, customHeaders?: Function): Observable<T> {
+    return this.request('POST', [
+      KalemConfig.getPath(),
+      KalemConfig.getApiVersion(),
+      this.model.getModelDefinition().plural
+    ].join('/'), undefined, undefined, { data }, null, customHeaders).map((data: T) => this.model.factory(data));
+  }
+
+  abstract getModelName(): string;
+}

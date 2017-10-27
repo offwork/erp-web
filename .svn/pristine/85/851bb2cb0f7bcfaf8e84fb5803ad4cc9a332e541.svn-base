@@ -1,0 +1,36 @@
+import { Injectable } from '@angular/core';
+
+import { Subject } from 'rxjs/Subject';
+import { Observable } from 'rxjs/Observable';
+
+import { SystemUser } from '../models/SystemUser';
+
+@Injectable()
+export class SystemUserApi {
+
+    constructor() {}
+
+    public login(
+        credentials: any, 
+        include: any = 'user', 
+        rememberMe: boolean = true, 
+        customHeaders?: Function): Observable<any> {
+        return null;
+    }
+
+    public logout(customHeaders?: Function): Observable<any> {
+        return null;
+    }
+
+    public create(data: any = {}, customHeaders?: Function): Observable<any> {
+        return null;
+    }
+
+    public resetPassword(options: any, customHeaders?: Function): Observable<any> {
+        return null;
+    }
+
+    public patchAttributes(id: any, data: any = {}, customHeaders?: Function): Observable<any> {
+        return null;
+    }
+}

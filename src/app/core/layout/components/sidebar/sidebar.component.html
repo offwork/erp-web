@@ -1,0 +1,89 @@
+<div class="aside">
+  <div class="aside-inner">
+    <nav class="sidebar">
+      <div class="brand">
+        <input autocomplete="off" name="searchmenu"
+               placeholder="Search" [autofocus]="true"> &nbsp;
+        <div class="search"><i class="fa fa-search" klNavDropdown></i></div>
+      </div>
+      <ul class="nav">
+        <li *ngFor="let item of sidebarNav" [ngClass]="{'nav-heading': item.heading}" [routerLinkActive]="['active']">
+          <a *ngIf="!item.heading && !item.submenu && !item.elink" [routerLink]="item.link" [attr.route]="item.link" title="{{item.label}}"
+             klNavDropdown klMouseHover>
+            <em class="material-icons" *ngIf="item.icon">{{item.icon}}</em>
+            <span>{{item.label}} </span>
+          </a>
+          <a *ngIf="!item.heading && item.submenu"
+             title="{{item.label}}"
+             class="nav-dropdown-toggle"
+             klNavDropdown klMouseHover >
+            <em class="material-icons" *ngIf="item.icon">{{item.icon}}</em>
+            <span>{{item.label}}</span>
+          </a>
+          <ul *ngIf="item.submenu" class="nav sidebar-subnav" [routerLinkActive]="['opening']">
+            <li class="sidebar-subnav-header">{{item.label}}</li>
+            <li *ngFor='let subitem of item.submenu' style="width: 98%;" [routerLinkActive]="['active']">
+              <a *ngIf="!subitem.submenu && !subitem.elink" [routerLink]="subitem.link"
+                 [attr.route]="subitem.link"
+                 title="{{subitem.label}}" klNavDropdown klMouseHover>
+                <em class="material-icons" *ngIf="subitem.icon">{{subitem.icon}}</em>
+                <span>{{subitem.label}}</span>
+              </a>
+              <a *ngIf="subitem.submenu"
+                 title="{{subitem.label}}"
+                 class="nav-dropdown-toggle"
+                 klNavDropdown klMouseHover>
+                <em class="material-icons" *ngIf="subitem.icon">{{subitem.icon}}</em>
+                <span>{{subitem.label}} sub</span>
+              </a>
+              <ul *ngIf="subitem.submenu" class="nav sidebar-subnav level2" [routerLinkActive]="['opening']">
+                <li *ngFor='let subitem2 of subitem.submenu' [routerLinkActive]="['active']">
+                  <a *ngIf="!subitem2.submenu"
+                     [routerLink]="subitem2.link"
+                     [attr.route]="subitem2.link"
+                     title="{{subitem2.label}}">
+                    <em class="material-icons" *ngIf="subitem2.icon">{{subitem2.icon}}</em>
+                    <span>{{subitem2.label}}</span>
+                  </a>
+                  <a *ngIf="subitem2.submenu"
+                     title="{{subitem2.label}}"
+                     class="nav-dropdown-toggle"
+                     klNavDropdown klMouseHover>
+                    <em class="material-icons" *ngIf="subitem2.icon">{{subitem2.icon}}</em>
+                    <span>{{subitem2.label}}</span>
+                  </a>
+                  <ul *ngIf="subitem2.submenu" class="nav sidebar-subnav level3" [routerLinkActive]="['opening']">
+                    <li *ngFor='let subitem3 of subitem2.submenu' [routerLinkActive]="['active']">
+                      <a *ngIf="!subitem3.submenu"
+                         [routerLink]="subitem3.link"
+                         [attr.route]="subitem3.link"
+                         title="{{subitem3.label}}">
+                        <em class="material-icons" *ngIf="subitem3.icon">{{subitem3.icon}}</em>
+                        <span>{{subitem3.label}}</span>
+                      </a>
+                      <a *ngIf="subitem3.submenu"
+                         title="{{subitem3.label}}"
+                         klNavDropdown klMouseHover>
+                        <em class="material-icons" *ngIf="subitem3.icon">{{subitem3.icon}}</em>
+                        <span>{{subitem3.label}}</span>
+                      </a>
+                      <ul *ngIf="subitem3.submenu" class="nav sidebar-subnav level3" [routerLinkActive]="['opening']">
+                        <li *ngFor='let subitem4 of subitem3.submenu' [routerLinkActive]="['active']">
+                          <a *ngIf="!subitem4.submenu" style="margin-left: 25px;" [routerLink]="subitem4.link" [attr.route]="subitem4.link" title="{{subitem4.label}}">
+                            <em class="material-icons" *ngIf="subitem4.icon">{{subitem4.icon}}</em>
+                            <span>{{subitem4.label}}</span>
+                          </a>
+                        </li>
+                      </ul>
+                    </li>
+                  </ul>
+                <li>
+              </ul>
+            <li>
+          </ul>
+        </li>
+      </ul>
+    </nav>
+  </div>
+</div>
+<!-- END Sidebar (left)-->

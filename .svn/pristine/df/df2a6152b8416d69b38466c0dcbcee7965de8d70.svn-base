@@ -1,0 +1,136 @@
+<div class="btn-group float-right">
+  <div class="btn-group px-2" dropdown placement="bottom right">
+    <button type="button" class="btn btn-outline-danger btn-sm">Dışa Aktar</button>
+    <button type="button" dropdownToggle class="btn btn-outline-danger btn-sm dropdown-toggle dropdown-toggle-split">
+      <span class="caret"></span>
+      <span class="sr-only">Split button!</span>
+    </button>
+    <ul *dropdownMenu class="dropdown-menu" role="menu">
+      <li role="menuitem"><a class="dropdown-item" href="javascript:void (0);" (click)="clickExportToExcel()">Excel Doc</a></li>
+      <li role="menuitem"><a class="dropdown-item" href="javascript:void (0);" (click)="clickExportToPdf()">PDF Doc</a>
+    </ul>
+  </div>
+  <button class="btn btn-outline-primary btn-sm" (click)="modalOperationNumber = -1; openModal(mdTemplate);">Ekle</button>
+</div>
+<br><hr/>
+<div class="details">
+  <wj-flex-grid #flexGrid [isReadOnly]="true" [allowDragging]="'None'"
+                [deferResizing]="true" [itemsSource]="allUsers" >
+    <wj-flex-grid-filter #filter></wj-flex-grid-filter>
+    <wj-flex-grid-column>
+      <ng-template wjFlexGridCellTemplate [cellType]="'Cell'">
+        <div class="btn-group" dropdown="" container="body">
+          <button class="btn btn-transparent dropdown-toggle p-0" dropdownToggle=""
+                  style="color: rgb(255, 152, 0);"
+                  type="button" aria-haspopup="true" aria-expanded="true">
+            <i class="icon-settings"></i>
+          </button>
+          <div class="dropdown-menu" *dropdownMenu="">
+            <a class="dropdown-item" href="javascript:void(0)"
+               (click)="menuItemClicked(0, mdTemplate)">
+              <i class="fa fa-refresh" style="color: #9E9E9E" aria-hidden="true"></i> Değiştir</a>
+            <a class="dropdown-item" href="javascript:void(0)"
+               (click)="menuItemClicked(1, mdTemplate)">
+              <i class="fa fa-sliders" style="color: #9E9E9E" aria-hidden="true"></i> İncele</a>
+            <a class="dropdown-item" href="javascript:void(0)"
+               (click)="menuItemClicked(2, mdTemplate)">
+              <i class="fa fa-trash" style="color: #9E9E9E" aria-hidden="true"></i> Sil</a>
+          </div>
+        </div>
+      </ng-template>
+    </wj-flex-grid-column>
+    <wj-flex-grid-column [header]="'Durum'" [binding]="'status'"></wj-flex-grid-column>
+    <wj-flex-grid-column [header]="'Tam Adı'" [binding]="'fullName'"></wj-flex-grid-column>
+    <wj-flex-grid-column [header]="'Kullanıcı Adı'" [binding]="'username'"></wj-flex-grid-column>
+    <wj-flex-grid-column [header]="'E-Posta'" [binding]="'email'"></wj-flex-grid-column>
+  </wj-flex-grid>
+  <!-- <pagination class="pagination-sm" [totalItems]="totalItems"
+              [(ngModel)]="currentIndex"
+              [maxSize]="maxSize"
+              (pageChanged)="pageChanged($event)"
+              [boundaryLinks]="true" ></pagination> -->
+</div>
+
+<!--  -->
+<ng-template #mdTemplate>
+  <div class="modal-header">
+    <h4 class="modal-title pull-left">Kullanıcı</h4>
+    <button type="button" class="close pull-right" aria-label="Close" (click)="modalRef.hide()">
+      <span aria-hidden="true">&times;</span>
+    </button>
+  </div>
+  <div *ngIf="modalOperationNumber === -1 " class="modal-body">
+    <div class="input-group mb-1">
+        <span class="input-group-addon">
+          <i class="icon-user"></i>
+        </span>
+      <input type="text" class="form-control" [(ngModel)]="addUserRow.email" placeholder="Email">
+    </div>
+    <div class="input-group mb-1">
+        <span class="input-group-addon">
+          <i class="icon-user"></i>
+        </span>
+      <input type="text" class="form-control" [(ngModel)]="addUserRow.fullName" placeholder="Tam Adı">
+    </div>
+    <div class="input-group mb-1">
+        <span class="input-group-addon">
+          <i class="icon-user"></i>
+        </span>
+      <input type="text" class="form-control" [(ngModel)]="addUserRow.username" placeholder="Kullanıcı Adı">
+    </div>
+    <div class="input-group mb-1">
+        <span class="input-group-addon">
+          <i class="icon-lock"></i>
+        </span>
+      <input type="password" class="form-control" placeholder="Şifre">
+    </div>
+  </div>
+  <div *ngIf="modalOperationNumber !== -1" class="modal-body">
+    <div class="input-group mb-1">
+        <span class="input-group-addon">
+          <i class="icon-user"></i>
+        </span>
+      <input type="text" class="form-control"
+             [disabled]="modalOperationNumber === 1"
+             [(ngModel)]="currentUserRow.email" placeholder="Email">
+    </div>
+    <div class="input-group mb-1">
+        <span class="input-group-addon">
+          <i class="icon-user"></i>
+        </span>
+      <input type="text" class="form-control"
+             [disabled]="modalOperationNumber === 1"
+             [(ngModel)]="currentUserRow.fullName" placeholder="Tam Adı">
+    </div>
+    <div class="input-group mb-1">
+        <span class="input-group-addon">
+          <i class="icon-user"></i>
+        </span>
+      <input type="text" class="form-control"
+             [disabled]="modalOperationNumber === 1"
+             [(ngModel)]="currentUserRow.username" placeholder="Kullanıcı Adı">
+    </div>
+    <div class="input-group mb-1">
+        <span class="input-group-addon">
+          <i class="icon-lock"></i>
+        </span>
+      <input type="password" class="form-control" [disabled]="modalOperationNumber === 1" placeholder="Şifre">
+    </div>
+  </div>
+  <div class="modal-footer">
+    <div class="btn-group px-2" dropdown placement="bottom right">
+      <button type="button" class="btn btn-sm btn-primary">Kaydet</button>
+      <button type="button" dropdownToggle class="btn btn-sm btn-primary dropdown-toggle dropdown-toggle-split">
+        <span class="caret"></span>
+        <span class="sr-only">Split button!</span>
+      </button>
+      <ul *dropdownMenu class="dropdown-menu" role="menu">
+        <li role="menuitem">
+          <a class="dropdown-item" href="javascript:void (0);" (click)="callUserApi('save')">Kaydet</a>
+        </li>
+        <li role="menuitem"><a class="dropdown-item"  href="javascript:void (0);" (click)="callUserApi('add')">Yeni</a></li>
+      </ul>
+    </div>
+    <button class="btn btn-sm btn-danger" (click)="modalRef.hide()">Vazgeç</button>
+  </div>
+</ng-template>

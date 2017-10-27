@@ -1,0 +1,55 @@
+/**
+ * GenesisUI - Bootstrap 4 Admin Template
+ * @version v1.8.7
+ * @link https://genesisui.com
+ * Copyright (c) 2017 creativeLabs Łukasz Holeczek
+ * @license Commercial
+ */
+// Override Boostrap variables
+@import "bootstrap-variables";
+
+// Import Bootstrap source files
+@import "bootstrap/bootstrap";
+
+// If you want you can import bootstrap scss files directly from node_modules or bower_components.
+// To do this please remove @import "bootstrap/bootstrap"; and uncomment proper line.
+
+// Import Bootstrap source files from node_modules
+// @import "node_modules/bootstrap/scss/bootstrap";
+
+// Import Bootstrap source files from bower_components
+// @import "bower_components/bootstrap/scss/bootstrap";
+
+@import "../assets/css/wijmo.min.css";
+
+// ng2-toasty
+@import "~ng2-toasty/style-bootstrap.css";
+
+@import "~font-awesome/css/font-awesome.css";
+@import "~simple-line-icons/css/simple-line-icons.css";
+
+// Override core variables
+@import "core-variables";
+
+// Import core styles
+@import "core/core";
+
+// Import vendors styles
+@import "vendors/vendors";
+
+// Import UI Kits
+@import "uikits/uikits";
+
+// Custom styles
+@import "custom";
+
+// Set Logo
+$navbar-brand-logo: url('../assets/img/logo.png');
+$navbar-brand-logo-size: 130px auto;
+
+.brand-logo {
+  display: block;
+  height: 80px;
+  background: $navbar-brand-logo no-repeat center center;
+  background-size: 200px auto;
+}

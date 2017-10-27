@@ -1,0 +1,16 @@
+import { Injectable } from '@angular/core';
+declare var $: any;
+
+@Injectable()
+export class SidebarService {
+  public layout: any;
+  constructor() {
+    this.layout = {
+      isFixed: true,
+      isCollapsed: false,
+    };
+  }
+  getLayoutSetting(name) {
+    return name ? this.layout[name] : this.layout;
+  }
+}
