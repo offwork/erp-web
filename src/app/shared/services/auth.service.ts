@@ -26,10 +26,12 @@ export class KalemAuth {
     this.save();
   }
 
+  /**
+   *
+   * @param {SDKToken} token
+   */
   public setToken(token: SDKToken): void {
     this.token = Object.assign(this.token, token);
-    console.log('TOKEN: ', token);
-    console.log('THIS TOKEN: ', this.token);
     this.save();
   }
 
@@ -63,7 +65,7 @@ export class KalemAuth {
   protected load(prop: string): any {
     return this.storage.get(`${this.prefix}${prop}`);
   }
-// {"headers":{"normalizedNames":{},"lazyUpdate":null},"status":200,"statusText":"OK","url":"http://192.168.0.105:8988/oauth/token","ok":true,"type":4,"body":{"access_token":"d456e281-654e-4cf8-9d7f-2d94bba1d1a1","token_type":"bearer","refresh_token":"47a806d2-f1f3-4e06-a15c-a393d8282152","expires_in":3599,"scope":"read write trust openid","user":{"grant_type":"password","password":"12345678","username":"ADMIN"},"rememberMe":true}}
+
   public clear(): void {
     Object.keys(this.token).forEach((prop: string) => this.storage.remove(`${this.prefix}${prop}`));
     this.token = new SDKToken();

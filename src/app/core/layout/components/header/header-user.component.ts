@@ -7,7 +7,7 @@ import { get } from 'lodash';
   template: `
     <li class="nav-item dropdown" dropdown (onToggle)="toggled($event)">
       <a href class="nav-link dropdown-toggle" dropdownToggle (click)="false">
-        <img class="img-avatar" [src]="user?.avatar" alt="admin@kalemyazilim.com">
+        <img class="img-avatar" [src]="'/assets/img/avatars/5.jpg'" alt="admin@kalemyazilim.com">
         <span class="d-md-down-none">{{user?.firstName}} {{user?.lastName}}</span>
       </a>
       <div class="dropdown-menu dropdown-menu-right" *dropdownMenu aria-labelledby="simple-dropdown">

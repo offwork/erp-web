@@ -12,6 +12,14 @@ export abstract class BaseKalemApi {
   protected path: string;
   protected model: any;
 
+  /**
+   *
+   * @param {HttpClient} http
+   * @param {SDKModels} models
+   * @param {KalemAuth} auth
+   * @param {JSONSearchParams} searchParams
+   * @param {ErrorHandler} errorHandler
+   */
   constructor(@Inject(HttpClient) protected http: HttpClient,
               @Inject(SDKModels) protected models: SDKModels,
               @Inject(KalemAuth) protected auth: KalemAuth,
@@ -20,6 +28,14 @@ export abstract class BaseKalemApi {
     this.model = this.models.get(this.getModelName())
   }
 
+  /**
+   *
+   * @param {string} method
+   * @param {string} url
+   * @param bodyParams
+   * @param {boolean} pubsub
+   * @returns {Observable<any>}
+   */
   public request(method: string, url: string, bodyParams: any = {}, pubsub: boolean = false): Observable<any> {
     let headers: HttpHeaders;
     let params;

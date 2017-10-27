@@ -12,9 +12,11 @@ import { DashboardComponent } from './components/dashboard/dashboard.component';
 import { IndexComponent } from './components/index/index.component';
 import { PasswordComponent } from './components/password/password.component';
 import { ProfileComponent } from './components/profile/profile.component';
+import { SDKBrowserModule, InternalStorage } from "../../shared/index";
 
 @NgModule({
   imports: [
+    SDKBrowserModule,
     UIModule,
     DashboardRoutingModule,
     ContentModule,
@@ -29,6 +31,7 @@ import { ProfileComponent } from './components/profile/profile.component';
   ],
   providers: [
     DashboardService,
+    InternalStorage,
   ]
 })
 export class DashboardModule { }

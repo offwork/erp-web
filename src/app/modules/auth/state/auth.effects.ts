@@ -20,7 +20,10 @@ export class UserEffects {
       this.userApi.login(action.payload)
         .subscribe(
           (success) => {
-            this.store.dispatch(new auth.LoginSuccess(success))
+            if (success.type !== 0) {
+              console.log('Login: ', success, '\n');
+              this.store.dispatch(new auth.LoginSuccess(success));
+            }
           },
           (error) => this.store.dispatch(new auth.LoginError(error))); });
 
@@ -33,9 +36,13 @@ export class UserEffects {
   loginSuccess: Observable<Action> = this.actions$
     .ofType<auth.LoginSuccess>(auth.AUTH_LOGIN_SUCCESS)
     .do((action) => {
-      window.localStorage.setItem('token', JSON.stringify(action.payload));
-      this.ui.toastSuccess('Sign In Successful', `You are logged in as ${get(action, 'payload.user.email')}`);
-      return this.store.dispatch({ type: '[App] Redirect Router' }); });
+      if (action.payload.type !== 0) {
+        console.log('Login Success:', action, '\n');
+        window.localStorage.setItem('token', JSON.stringify(action.payload));
+        this.ui.toastSuccess('Oturum açma başarılı', `${get(action, 'payload.body.user.username')} olrak oturum açtın.`);
+        return this.store.dispatch({ type: '[App] Redirect Router' });
+      }
+  });
 
   /*@Effect({ dispatch: false })
   register: Observable<Action> = this.actions$
@@ -88,6 +95,13 @@ export class UserEffects {
       this.ui.toastSuccess('Log Out Successful', 'You are logged out');
       return this.store.dispatch({ type: '[App] Redirect Router' }); });
 
+  /**
+   *
+   * @param {Actions} actions$
+   * @param {Store<any>} store
+   * @param {SystemUserApi} userApi
+   * @param {UIService} ui
+   */
   constructor(
       private actions$: Actions,
       private store: Store<any>,

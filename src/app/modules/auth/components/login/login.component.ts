@@ -9,18 +9,14 @@ import * as auth from '../../state/auth.actions';
       <div class="form-group">
         <label>Email</label>
         <div class="input-group mb-1">
-          <span class="input-group-addon">
-            <i class="icon-user"></i>
-          </span>
+          <span class="input-group-addon"><i class="icon-user"></i></span>
           <input  required type="text" class="form-control" placeholder="Email">
         </div>
       </div>
       <div class="form-group">
         <label>Şifre</label>
         <div class="input-group mb-1">
-          <span class="input-group-addon">
-            <i class="icon-lock"></i>
-          </span>
+          <span class="input-group-addon"><i class="icon-lock"></i></span>
           <input [(ngModel)]="credentials.password" required type="password" class="form-control"
                  placeholder="Password">
         </div>

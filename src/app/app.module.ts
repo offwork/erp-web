@@ -21,19 +21,12 @@ import { NotFoundComponent } from './shell/not-found/not-found.component';
 import { RouterComponent } from './shell/router/router.component';
 
 import { LogService } from './log.service';
-import { AuthService } from './modules/auth';
-
-import { SDKModels } from "./shared/models/SDKModels";
-import { SystemUserApi } from "./shared/services/SystemUser";
-import { KalemAuth } from "./shared/services/auth.service";
-import { JSONSearchParams } from "./shared/services/search.params";
-
-import { InternalStorage } from "./shared/storage/storage.swaps";
 
 /*
 * Script Loader
 * */
 import 'script-loader!jszip/dist/jszip.min.js';
+import {SDKBrowserModule} from "./shared/index";
 
 @NgModule({
   imports: [
@@ -43,6 +36,7 @@ import 'script-loader!jszip/dist/jszip.min.js';
     HttpClientModule,
     RouterModule,
 
+    SDKBrowserModule.forRoot(),
     LayoutModule,
     UIModule,
 
@@ -52,15 +46,7 @@ import 'script-loader!jszip/dist/jszip.min.js';
 
     ExtensionsModule.forRoot(),
   ],
-  providers: [
-    LogService,
-    AuthService,
-    SystemUserApi,
-    SDKModels,
-    KalemAuth,
-    InternalStorage,
-    JSONSearchParams,
-  ],
+  providers: [ LogService ],
   declarations: [
     AppComponent,
     NotFoundComponent,
